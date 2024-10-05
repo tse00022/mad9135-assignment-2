@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text, View, RefreshControl, TouchableOpacity } from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, Text, View, RefreshControl, TouchableOpacity, Platform, StatusBar } from "react-native";
 import axios from "axios";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from 'react-native-toast-message';
 import { MaterialIcons } from '@expo/vector-icons';
 import UserAvatar from 'react-native-user-avatar';
-import { Platform } from "react-native";
 
 export default function App() {
   const [users, setUsers] = useState([]);
@@ -16,7 +15,6 @@ export default function App() {
   }, []);
 
   const fetchUsers = (count = 10, append=false) => {
-    console.log(`count = ${count}`);
     setRefreshing(true);
     axios
       .get(`https://random-data-api.com/api/users/random_user?size=${count}`)
@@ -57,7 +55,6 @@ export default function App() {
       });
   }
 
-  // Item renderer for FlatList
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <View>
@@ -71,8 +68,8 @@ export default function App() {
   );
 
   return (
-    <SafeAreaProvider style={styles.container}>
-      <SafeAreaView>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
         <FlatList
           data={users}
           renderItem={renderItem}
@@ -81,8 +78,8 @@ export default function App() {
             <RefreshControl refreshing={refreshing} onRefresh={fetchUsers} />
           }
         />
-        <TouchableOpacity style={styles.fab} onPress={()=>{fetchUsers(1, true)}}>
-            <MaterialIcons name="add" size={24} color="white" />
+        <TouchableOpacity style={styles.fab} onPress={() => { fetchUsers(1, true) }}>
+          <MaterialIcons name="add" size={24} color="white" />
         </TouchableOpacity>
         <Toast />
       </SafeAreaView>
@@ -93,13 +90,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    marginHorizontal: 16,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
   },
   item: {
-    width: '100%',
     padding: 10,
     marginVertical: 8,
     borderBottomColor: '#ccc',
