@@ -58,8 +58,8 @@ export default function App() {
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <View>
-        <Text style={{textAlign: Platform.OS == "android" ? "left" : "right"}}>{item.first_name}</Text>
-        <Text style={{textAlign: Platform.OS == "android" ? "left" : "right"}}>{item.last_name}</Text>
+        <Text style={{textAlign: Platform.OS == "ios" ? "left" : "right"}}>{item.first_name}</Text>
+        <Text style={{textAlign: Platform.OS == "ios" ? "left" : "right"}}>{item.last_name}</Text>
       </View>
       <View>
         <UserAvatar size={50} name={item.first_name} src={item.avatar} borderRadius={10}/>
@@ -73,7 +73,7 @@ export default function App() {
         <FlatList
           data={users}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.uid.toString()}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={fetchUsers} />
           }
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderBottomColor: '#ccc',
     borderBottomWidth: 2,
-    flexDirection: Platform.OS == "android" ? "row" : "row-reverse",
+    flexDirection: Platform.OS == "ios" ? "row" : "row-reverse",
     justifyContent: 'space-between',
   },
   fab: {
