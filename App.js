@@ -21,30 +21,40 @@ export default function App() {
         setRefreshing(false);
         Toast.show({
           type: 'success',
-          text1: 'Success',
           text2: 'User list fetched successfully 👋',
           position: 'bottom',
           visibilityTime: 500,
         });
       })
       .catch((e) => {
-        alert("Network error, please try again later.");
-        console.error("Error fetching data: ", e);
         setRefreshing(false);
+        if (e.response && e.response.status === 429) {
+          Toast.show({
+            type: 'error',
+            text1: 'Too fast!',
+            text2: 'Please slow down and try again later.✋🏾',
+            position: 'bottom',
+          });
+          return
+        }
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: e.message,
+          position: 'bottom',
+        });
       });
   }
 
   // Item renderer for FlatList
-  const renderItem = ({ item }) => {
-    console.log("item: ", item);
-    console.log("item.first_name: ", item.first_name);
-    return (<View>
+  const renderItem = ({ item }) => (
+    <View>
       <Text>{item.first_name}</Text>
       <Text>{item.last_name}</Text>
       <Text style={styles.body}>{item.uid}</Text>
       <Text style={styles.body}>{item.avatar}</Text>
-    </View>)
-  };
+    </View>
+  );
 
   return (
     <SafeAreaProvider style={styles.container}>
