@@ -1,24 +1,32 @@
 import { useState, useEffect } from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text, View, RefreshControl } from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, Text, View, RefreshControl, TouchableOpacity } from "react-native";
 import axios from "axios";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from 'react-native-toast-message';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function App() {
   const [users, setUsers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    fetchUsers(10);
+    fetchUsers();
   }, []);
 
-  const fetchUsers = (count = 1) => {
+  const fetchUsers = (count = 10, append=false) => {
+    console.log(`count = ${count}`);
     setRefreshing(true);
     axios
       .get(`https://random-data-api.com/api/users/random_user?size=${count}`)
       .then((response) => {
-        setUsers(response.data);
         setRefreshing(false);
+
+        if (append) {
+          setUsers([...response.data, ...users]);
+        } else {
+          setUsers(response.data);
+        }
+
         Toast.show({
           type: 'success',
           text2: 'User list fetched successfully 👋',
@@ -33,6 +41,7 @@ export default function App() {
             type: 'error',
             text1: 'Too fast!',
             text2: 'Please slow down and try again later.✋🏾',
+            visibilityTime: 2000,
             position: 'bottom',
           });
           return
@@ -67,6 +76,9 @@ export default function App() {
             <RefreshControl refreshing={refreshing} onRefresh={fetchUsers} />
           }
         />
+        <TouchableOpacity style={styles.fab} onPress={()=>{fetchUsers(1, true)}}>
+            <MaterialIcons name="add" size={24} color="white" />
+        </TouchableOpacity>
         <Toast />
       </SafeAreaView>
     </SafeAreaProvider>
@@ -80,5 +92,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    backgroundColor: '#2196F3',
+    borderRadius: 30,
+    width: 60,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
   },
 });
