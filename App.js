@@ -5,6 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from 'react-native-toast-message';
 import { MaterialIcons } from '@expo/vector-icons';
 import UserAvatar from 'react-native-user-avatar';
+import { Platform } from "react-native";
 
 export default function App() {
   const [users, setUsers] = useState([]);
@@ -60,8 +61,8 @@ export default function App() {
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <View>
-        <Text>{item.first_name}</Text>
-        <Text>{item.last_name}</Text>
+        <Text style={{textAlign: Platform.OS == "android" ? "left" : "right"}}>{item.first_name}</Text>
+        <Text style={{textAlign: Platform.OS == "android" ? "left" : "right"}}>{item.last_name}</Text>
       </View>
       <View>
         <UserAvatar size={50} name={item.first_name} src={item.avatar} borderRadius={10}/>
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderBottomColor: '#ccc',
     borderBottomWidth: 2,
-    flexDirection: 'row',
+    flexDirection: Platform.OS == "android" ? "row" : "row-reverse",
     justifyContent: 'space-between',
   },
   fab: {
