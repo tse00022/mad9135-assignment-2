@@ -70,6 +70,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        <Text>Welcome to the UserList</Text>
         <FlatList
           data={users}
           renderItem={renderItem}
