@@ -4,6 +4,7 @@ import axios from "axios";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from 'react-native-toast-message';
 import { MaterialIcons } from '@expo/vector-icons';
+import UserAvatar from 'react-native-user-avatar';
 
 export default function App() {
   const [users, setUsers] = useState([]);
@@ -57,11 +58,14 @@ export default function App() {
 
   // Item renderer for FlatList
   const renderItem = ({ item }) => (
-    <View>
-      <Text>{item.first_name}</Text>
-      <Text>{item.last_name}</Text>
-      <Text style={styles.body}>{item.uid}</Text>
-      <Text style={styles.body}>{item.avatar}</Text>
+    <View style={styles.item}>
+      <View>
+        <Text>{item.first_name}</Text>
+        <Text>{item.last_name}</Text>
+      </View>
+      <View>
+        <UserAvatar size={50} name={item.first_name} src={item.avatar} borderRadius={10}/>
+      </View>
     </View>
   );
 
@@ -92,6 +96,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  item: {
+    width: '100%',
+    padding: 10,
+    marginVertical: 8,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   fab: {
     position: 'absolute',
